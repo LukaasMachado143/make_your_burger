@@ -1,20 +1,50 @@
 <template>
-    <div>
-        <router-link to="/">
-            <img src="" id="logo">
-        </router-link>
-        <router-link to="/">Home</router-link>
+    <div id="navBar">
+        <RouterLink to="/" id="logo-img">
+            <img :src="logo" :alt="descriptionImage" id="logo">
+        </RouterLink >
+        <RouterLink to="/">Home</RouterLink >
         |
-        <router-link to="/requests">Pedidos</router-link>
+        <RouterLink to="/requests">Pedidos</RouterLink >
     </div>
 </template>
 
 <script>
     export default {
-        name: 'NavBar'
+        name: 'NavBar',
+        props:["logo","descriptionImage"]
     }
 </script>
 
 <style scoped>
+    #navBar{
+        background-color: #222;
+        border-bottom: 4px solid #111;
+        padding: 15px 50px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    #navBar #logo-img{
+        margin: auto;
+        margin-left: 0;
+    }
+
+    #logo{
+        width: 40px;
+        height: 40px;
+    }
+
+    #navBar a{
+        color: #FCBA03;
+        text-decoration: none;
+        margin: 12px;
+        transition: 0.5s;
+    }
+
+    #navBar a:hover{
+        color: #FFF;
+    }
 
 </style>

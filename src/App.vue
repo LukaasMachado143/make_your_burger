@@ -1,6 +1,6 @@
 
 <template> 
-  <NavBar/>
+  <NavBar :logo="logo_src" :descriptionImage="dcpImg"/>
   <RouterView />
   <FooterComponent />
 </template>
@@ -13,6 +13,11 @@ export default{
   components:{
     NavBar,
     FooterComponent
+  }, data(){
+    return{
+      logo_src: '/public/img/logo.png',
+      dcpImg: 'Make Your Burger - Faça seu Hamburguer'
+    }
   }
 }
 </script>
