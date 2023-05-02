@@ -1,18 +1,21 @@
 
-<template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-  
+<template> 
+  <NavBar/>
   <RouterView />
+  <FooterComponent />
 </template>
 
 <script >
+import NavBar from './components/NavBar.vue';
+import FooterComponent from './components/FooterComponent.vue';
+export default{
+  name: 'App',
+  components:{
+    NavBar,
+    FooterComponent
+  }
+}
 </script>
+
+<style scoped>
+</style>
