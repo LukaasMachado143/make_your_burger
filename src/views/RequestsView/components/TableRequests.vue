@@ -10,19 +10,17 @@
           <div>Ações</div>
         </div>
         <div id="table-body">
-          <div id="row">
-            <div class="order-number">1</div>
-            <div>Lucas</div>
-            <div>3 Queijos</div>
-            <div>Maminha</div>
+          <div id="row" v-for="burgerData in burgersData" :key="burgerData.id">
+            <div class="order-number">{{burgerData.id}}</div>
+            <div>{{burgerData.name}}</div>
+            <div>{{burgerData.bread}}</div>
+            <div>{{burgerData.meat}}</div>
             <div>
-              <ul>
-                <li>Salame</li>
-                <li>Maionese</li>
-                <li>Tomate</li>
+              <ul v-for="(optional, index) in burgersData.optionalItems" :key="index">
+                <li>{{optional}}</li>
               </ul>
             </div>
-            <div>Solicitado</div>
+            <div>{{burgerData.status}}</div>
             <div id="acoes">
               <select name="status" id="status" v-model="status">
                 <option value="">Selecione...</option>
@@ -39,8 +37,22 @@ export default {
     name: 'TableRequests',
     data(){
         return{
-            status: ['Em produção', 'Finalizado']
+            burgersData: null,
+            status: []
         }
+    },
+    methods:{
+        async getBurgerRequests(){
+            const request = await fetch('http://localhost:3000/burgers');
+            const burgerRequestData = await request.json();
+
+            this.burgersData = burgerRequestData;
+
+            console.log(burgerRequestData)
+        }
+    },
+    mounted(){
+        this.getBurgerRequests();
     }
 }
 </script>
