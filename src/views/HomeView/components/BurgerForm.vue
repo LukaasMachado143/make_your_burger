@@ -74,6 +74,7 @@
   input, select{
     padding: 5px 10px;
     width: 300px;
+    margin-left: 10px ;
   }
 
   #optional-container{
