@@ -77,38 +77,5 @@
       "type": "Finalizado"
     }
   ],
-  "burgers": [
-    {
-      "name": "Lucas Fernando",
-      "bread": "3 Queijos",
-      "meat": "Maminha",
-      "optionalItems": [
-        "Bacon",
-        "Cheddar",
-        "Tomate"
-      ],
-      "status": "Solicitado",
-      "id": 1
-    },
-    {
-      "name": "Lucas Fernando",
-      "bread": "Parmesão e Orégano",
-      "meat": "Veggie burger",
-      "optionalItems": [
-        "Bacon"
-      ],
-      "status": "Solicitado",
-      "id": 2
-    },
-    {
-      "name": "Lucas Fernando",
-      "bread": "Italiano Branco",
-      "meat": "Alcatra",
-      "optionalItems": [
-        "Salame"
-      ],
-      "status": "Solicitado",
-      "id": 3
-    }
-  ]
+  "burgers": []
 }

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <MessageComponent :messageText="msg" v-show="msg"/>
     <form id="burger-form"  @submit="insertBurger">
       <div class="input-container">
         <label for="nameClient">Nome do Cliente:</label>
@@ -38,74 +39,67 @@
 </template>
 
 <script>
+import MessageComponent from '../../../components/MessageComponent.vue';
+
     export default {
-        name: 'BurgerForm',
-        data(){
-          return{
-            breadTypesData:null,
+    name: "BurgerForm",
+    data() {
+        return {
+            breadTypesData: null,
             meatTypesData: null,
-            optionalItemsData:null,
+            optionalItemsData: null,
             nameClient: null,
             breadType: null,
             meatType: null,
             optionalItems: [],
             msg: null
-          }
-        },
-        methods:{
-          async getIngredients(){
-            const request = await fetch('http://localhost:3000/ingredients')
+        };
+    },
+    methods: {
+        async getIngredients() {
+            const request = await fetch("http://localhost:3000/ingredients");
             const requestData = await request.json();
             this.breadTypesData = requestData.breadTypes;
             this.meatTypesData = requestData.meatTypes;
             this.optionalItemsData = requestData.optionalItems;
-          },
-
-          async insertBurger(e){
+        },
+        async insertBurger(e) {
             //prevent default events
             e.preventDefault();
-
             //creating body post
-            const burgerData= {
-              name: this.nameClient,
-              bread: this.breadType,
-              meat: this.meatType,
-              optionalItems: Array.from(this.optionalItems),
-              status: "Solicitado"
-            }
-
+            const burgerData = {
+                name: this.nameClient,
+                bread: this.breadType,
+                meat: this.meatType,
+                optionalItems: Array.from(this.optionalItems),
+                status: "Solicitado"
+            };
             //transforming body in json Object
             const burgerJson = JSON.stringify(burgerData);
-
             //Send request to insert json Object
-            const postRequest = await fetch('http://localhost:3000/burgers',{
-              method: "POST",
-              headers: { "Content-Type": "application/json"},
-              body: burgerJson
-
+            const postRequest = await fetch("http://localhost:3000/burgers", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: burgerJson
             });
-
             //Return of insert
             const serverAnswer = await postRequest.json();
-            console.log(serverAnswer)
-
+            console.log(serverAnswer);
             //send message for user
-            
-
+            this.msg = `Pedido N.${serverAnswer.id} realizado com sucesso`;
+            setTimeout(() => this.msg = "",3000);
             //clearning form
             this.nameClient = "";
             this.breadType = "";
             this.meatType = "";
             this.optionalItems = [];
-            
-          }
-
-        },
-        mounted() {
-          this.getIngredients();
-        },
-        
-    }
+        }
+    },
+    mounted() {
+        this.getIngredients();
+    },
+    components: { MessageComponent }
+}
 </script>
 
 <style scoped>
