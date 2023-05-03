@@ -47,7 +47,8 @@
 
 <script>
     export default {
-        name: 'BurgerForm'
+        name: 'BurgerForm',
+        
     }
 </script>
 
