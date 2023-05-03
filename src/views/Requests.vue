@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div >
+  <div class="main-container">
     <h1>Pedidos</h1>
   </div>
 </template>

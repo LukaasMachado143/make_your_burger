@@ -4,7 +4,6 @@
             <img :src="logo" :alt="descriptionImage" id="logo">
         </RouterLink >
         <RouterLink to="/">Home</RouterLink >
-        |
         <RouterLink to="/requests">Pedidos</RouterLink >
     </div>
 </template>
