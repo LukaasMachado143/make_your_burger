@@ -28,7 +28,6 @@
         text-align: center;
         font-size: 60px;
         border-radius: 50px;
-        width: 580px;
-        height: 80px;
+        padding: 15px;
     }
 </style>
