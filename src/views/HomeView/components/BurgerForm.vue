@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form id="burger-form">
+    <form id="burger-form"  @submit="insertBurger">
       <div class="input-container">
         <label for="nameClient">Nome do Cliente:</label>
         <input type="text" name="nameClient" id="nameClient" v-model="nameClient" placeholder="Digite seu nome...">
@@ -28,18 +28,10 @@
           <input type="checkbox" name="optionalItems" id="optionalItems" v-model="optionalItems" :value="optionalItem.type">
           <span>{{optionalItem.type}}</span>  
         </div>
-        <div class="checkbox-container">
-          <input type="checkbox" name="optionalItems" id="optionalItems" v-model="optionalItems" value="salame">
-          <span>Salame</span>  
-        </div>
-        <div class="checkbox-container">
-          <input type="checkbox" name="optionalItems" id="optionalItems" v-model="optionalItems" value="salame">
-          <span>Salame</span>  
-        </div>
       </div>
 
       <div class="input-container">
-        <input type="button" class="submit-btn" value="Fazer Pedido">
+        <input type="submit" class="submit-btn" value="Fazer Pedido">
       </div>
     </form>
   </div>
@@ -57,7 +49,6 @@
             breadType: null,
             meatType: null,
             optionalItems: [],
-            status: 'Em produção',
             msg: null
           }
         },
@@ -68,7 +59,47 @@
             this.breadTypesData = requestData.breadTypes;
             this.meatTypesData = requestData.meatTypes;
             this.optionalItemsData = requestData.optionalItems;
+          },
+
+          async insertBurger(e){
+            //prevent default events
+            e.preventDefault();
+
+            //creating body post
+            const burgerData= {
+              name: this.nameClient,
+              bread: this.breadType,
+              meat: this.meatType,
+              optionalItems: Array.from(this.optionalItems),
+              status: "Solicitado"
+            }
+
+            //transforming body in json Object
+            const burgerJson = JSON.stringify(burgerData);
+
+            //Send request to insert json Object
+            const postRequest = await fetch('http://localhost:3000/burgers',{
+              method: "POST",
+              headers: { "Content-Type": "application/json"},
+              body: burgerJson
+
+            });
+
+            //Return of insert
+            const serverAnswer = await postRequest.json();
+            console.log(serverAnswer)
+
+            //send message for user
+            
+
+            //clearning form
+            this.nameClient = "";
+            this.breadType = "";
+            this.meatType = "";
+            this.optionalItems = [];
+            
           }
+
         },
         mounted() {
           this.getIngredients();
