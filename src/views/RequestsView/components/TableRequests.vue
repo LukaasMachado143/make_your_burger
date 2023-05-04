@@ -16,14 +16,14 @@
             <div>{{burgerData.meat}}</div>
             <div>
               <ul>
-                <li v-for="(optionalItems, index) in burgersData.optionalItems" :key="index">{{optionalItems}}</li>
+                <li v-for="(optionalItem, index) in burgerData.optionalItems" :key="index">{{optionalItem}}</li>
               </ul>
             </div>
             <div id="acoes">
               <select name="status" id="status" v-model="statusSend">
-                <option v-for="status in statusData" :key="status.id" :value="status.type" :selected="burgersData.status == status.type">{{status.type}}</option>
+                <option v-for="status in statusData" :key="status.id" :value="status.type" :selected="burgerData.status == status.type">{{status.type}}</option>
               </select>
-              <button class="delete-btn">Cancelar</button>
+              <button class="delete-btn" @click="deleteRequest(burgerData.id)">Cancelar</button>
             </div>
           </div>
         </div>
@@ -44,15 +44,16 @@ export default {
         async getBurgerRequests(){
             const request = await fetch('http://localhost:3000/burgers');
             const burgerRequestData = await request.json();
-
             this.burgersData = burgerRequestData;
-            console.log(burgerRequestData.optionalItems);
             this.getStatus();
         },
         async getStatus(){
           const request = await fetch('http://localhost:3000/status');
           const statusRequestData = await request.json();
           this.statusData = statusRequestData;
+        },
+        async deleteRequest(id){
+          alert(id)
         }
     },
     mounted(){
