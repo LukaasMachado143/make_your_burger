@@ -80,13 +80,13 @@
   "burgers": [
     {
       "name": "Lucas Fernando",
-      "bread": "Parmesão e Orégano",
-      "meat": "Picanha",
+      "bread": "3 Queijos",
+      "meat": "Maminha",
       "optionalItems": [
         "Bacon",
         "Cheddar"
       ],
-      "status": "Solicitado",
+      "status": "Em produção",
       "id": 1
     }
   ]
