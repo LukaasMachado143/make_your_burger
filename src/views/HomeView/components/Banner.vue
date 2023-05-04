@@ -19,10 +19,10 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        border-radius: 10px;
         backdrop-filter: blur( 13.5px );
         -webkit-backdrop-filter: blur( 13.5px );
         border: 15px solid rgba( 255, 255, 255, 0.18 );
+        border-radius: 10px;
     }
 
     #main-banner h1{
@@ -31,10 +31,10 @@
         backdrop-filter: blur( 13.5px );
         -webkit-backdrop-filter: blur( 13.5px );
         border: 1px solid rgba( 255, 255, 255, 0.50 );
+        border-radius: 50px;
         color: #FFF;
         text-align: center;
         font-size: 60px;
-        border-radius: 50px;
         padding: 15px;
         margin-left: 20px;
     }
