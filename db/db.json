@@ -81,8 +81,11 @@
     {
       "name": "Lucas Fernando",
       "bread": "Parmesão e Orégano",
-      "meat": "Alcatra",
-      "optionalItems": [],
+      "meat": "Picanha",
+      "optionalItems": [
+        "Bacon",
+        "Cheddar"
+      ],
       "status": "Solicitado",
       "id": 1
     }

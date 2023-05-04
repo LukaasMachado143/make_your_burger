@@ -6,7 +6,6 @@
           <div>Pão</div>
           <div>Carne</div>
           <div>Opcionais</div>
-          <div>Status</div>
           <div>Ações</div>
         </div>
         <div id="table-body">
@@ -16,14 +15,13 @@
             <div>{{burgerData.bread}}</div>
             <div>{{burgerData.meat}}</div>
             <div>
-              <ul v-for="(optional, index) in burgersData.optionalItems" :key="index">
-                <li>{{optional}}</li>
+              <ul>
+                <li v-for="(optionalItems, index) in burgersData.optionalItems" :key="index">{{optionalItems}}</li>
               </ul>
             </div>
-            <div>{{burgerData.status}}</div>
             <div id="acoes">
-              <select name="status" id="status" v-model="status">
-                <option value="">Selecione...</option>
+              <select name="status" id="status" v-model="statusSend">
+                <option v-for="status in statusData" :key="status.id" :value="status.type" :selected="burgersData.status == status.type">{{status.type}}</option>
               </select>
               <button class="delete-btn">Cancelar</button>
             </div>
@@ -38,7 +36,8 @@ export default {
     data(){
         return{
             burgersData: null,
-            status: []
+            statusData: [],
+            statusSend: null
         }
     },
     methods:{
@@ -47,8 +46,13 @@ export default {
             const burgerRequestData = await request.json();
 
             this.burgersData = burgerRequestData;
-
-            console.log(burgerRequestData)
+            console.log(burgerRequestData.optionalItems);
+            this.getStatus();
+        },
+        async getStatus(){
+          const request = await fetch('http://localhost:3000/status');
+          const statusRequestData = await request.json();
+          this.statusData = statusRequestData;
         }
     },
     mounted(){
