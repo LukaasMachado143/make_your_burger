@@ -6,7 +6,6 @@
 
 <script>
     export default {
-        // eslint-disable-next-line vue/multi-word-component-names
         name: 'Banner'
     }
 </script>
@@ -20,6 +19,10 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
+        border-radius: 10px;
+        backdrop-filter: blur( 13.5px );
+        -webkit-backdrop-filter: blur( 13.5px );
+        border: 15px solid rgba( 255, 255, 255, 0.18 );
     }
 
     #main-banner h1{
@@ -27,11 +30,12 @@
         box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
         backdrop-filter: blur( 13.5px );
         -webkit-backdrop-filter: blur( 13.5px );
-        border: 1px solid rgba( 255, 255, 255, 0.18 );
+        border: 1px solid rgba( 255, 255, 255, 0.50 );
         color: #FFF;
         text-align: center;
         font-size: 60px;
         border-radius: 50px;
         padding: 15px;
+        margin-left: 20px;
     }
 </style>
