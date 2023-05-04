@@ -77,17 +77,5 @@
       "type": "Finalizado"
     }
   ],
-  "burgers": [
-    {
-      "name": "Lucas Fernando",
-      "bread": "3 Queijos",
-      "meat": "Maminha",
-      "optionalItems": [
-        "Bacon",
-        "Cheddar"
-      ],
-      "status": "Em produção",
-      "id": 1
-    }
-  ]
+  "burgers": []
 }

@@ -1,5 +1,6 @@
 <template>
   <div id="main-table">
+    <MessageComponent :messageText="msg" v-show="msg" />
     <div id="table-head">
       <div class="order-id">N.</div>
       <div>Cliente</div>
@@ -22,7 +23,12 @@
           </ul>
         </div>
         <div id="acoes">
-          <select name="status" id="status" v-model="burgerData.status" @change="alterStatusRequest($event,burgerData.id)">
+          <select
+            name="status"
+            id="status"
+            v-model="burgerData.status"
+            @change="alterStatusRequest($event, burgerData.id)"
+          >
             <option
               v-for="status in statusData"
               :key="status.id"
@@ -40,12 +46,17 @@
 </template>
 
 <script>
+import MessageComponent from '../../../components/MessageComponent.vue'
 export default {
   name: 'TableRequests',
+  components: {
+    MessageComponent
+  },
   data() {
     return {
       burgersData: null,
-      statusData: null
+      statusData: null,
+      msg: null
     }
   },
   methods: {
@@ -66,25 +77,28 @@ export default {
       })
 
       const response = await deleteRequest.json()
-
+      this.getBurgerRequests()
+      this.msg = `Pedido N.${id} cancelado com sucesso.`
       setTimeout(() => {
-        this.getBurgerRequests()
-      }, response);
+        this.msg = ''
+      }, 3500)
     },
-    async alterStatusRequest(event, id){
-      const newStatus = event.target.value;
-      const newstatusSend = JSON.stringify({status: newStatus});
+    async alterStatusRequest(event, id) {
+      const newStatus = event.target.value
+      const newstatusSend = JSON.stringify({ status: newStatus })
       const alterRequest = await fetch(`http://localhost:3000/burgers/${id}`, {
         method: 'PATCH',
-        headers: {'Content-Type':'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: newstatusSend
-      });
+      })
 
       const response = await alterRequest.json();
-      setTimeout(() => {
-        this.getBurgerRequests()
-      }, response);
 
+      this.msg = `Status do pedido N.${response.id} atualizado para ${response.status}.`
+      setTimeout(() => {
+        this.msg = '',
+        this.getBurgerRequests()
+      }, 5000)
     }
   },
   mounted() {
