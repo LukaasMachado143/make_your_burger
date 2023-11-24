@@ -14,7 +14,7 @@ export default class IngredientService {
   async delete(id) {
     return await api.delete(`${this.prefix}/${id}`)
   }
-  async update(id, burgerData) {
-    return await api.put(`${this.prefix}/${id}`, burgerData)
+  async update(id, status) {
+    return await api.patch(`${this.prefix}/${id}/${status}`)
   }
 }

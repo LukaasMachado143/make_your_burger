@@ -23,13 +23,15 @@
           </ul>
         </div>
         <div id="acoes">
-          <select name="status" id="status" v-model="burgerData.status"
-            @change="alterStatusRequest($event, burgerData.id)">
+          <span v-if="burgerData.status == 'Finalizado'">{{ burgerData.status }}</span>
+          <select v-if="burgerData.status != 'Finalizado'" name="status" id="status" v-model="burgerData.status"
+            @change="alterStatusRequest($event.target.value, burgerData.id)">
             <option v-for="status, index in statusList" :key="index" :value="status" :selected="burgerData.status">
               {{ status }}
             </option>
           </select>
-          <button class="delete-btn" @click="deleteRequest(burgerData.id)">Cancelar</button>
+          <button v-if="burgerData.status != 'Finalizado'" class="delete-btn"
+            @click="deleteRequest(burgerData.id)">Cancelar</button>
         </div>
       </div>
     </div>
@@ -68,26 +70,14 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
-
+    },
+    alterStatusRequest(status, id) {
+      this.service.update(id, status).then((res) => {
+        if (res.data.success == true) this.getBurgerRequests()
+      }).catch((error) => {
+        console.log(error)
+      })
     }
-   
-    // async alterStatusRequest(event, id) {
-    //   const newStatus = event.target.value
-    //   const newstatusSend = JSON.stringify({ status: newStatus })
-    //   const alterRequest = await fetch(`http://localhost:3000/burgers/${id}`, {
-    //     method: 'PATCH',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: newstatusSend
-    //   })
-
-    //   const response = await alterRequest.json();
-
-    //   this.msg = `Status do pedido N.${response.id} atualizado para ${response.status}.`
-    //   setTimeout(() => {
-    //     this.msg = '',
-    //     this.getBurgerRequests()
-    //   }, 5000)
-    // }
   },
   mounted() {
     this.getBurgerRequests()
