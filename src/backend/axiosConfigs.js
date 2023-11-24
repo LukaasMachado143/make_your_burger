@@ -3,7 +3,7 @@ function getURL() {
   if (window.location.host.includes('192.168.18.22:5173')) {
     return 'http://localhost:8000'
   } else {
-    return 'https://back-end-todo-list-ygai.vercel.app/'
+    return 'https://make-your-burger-back.vercel.app/'
   }
 }
 
