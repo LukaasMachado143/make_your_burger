@@ -61,30 +61,16 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
-    }
-    // async getBurgerRequests() {
-    //   const request = await fetch('http://localhost:3000/burgers')
-    //   const burgerRequestData = await request.json()
-    //   this.burgersData = burgerRequestData
-    //   this.getStatus()
-    // },
-    // async getStatus() {
-    //   const request = await fetch('http://localhost:3000/status')
-    //   const statusRequestData = await request.json()
-    //   this.statusData = statusRequestData
-    // },
-    // async deleteRequest(id) {
-    //   const deleteRequest = await fetch(`http://localhost:3000/burgers/${id}`, {
-    //     method: 'DELETE'
-    //   })
+    },
+    deleteRequest(id) {
+      this.service.delete(id).then((res) => {
+        if (res.data.success == true) this.getBurgerRequests()
+      }).catch((error) => {
+        console.log(error)
+      })
 
-    //   const response = await deleteRequest.json()
-    //   this.getBurgerRequests()
-    //   this.msg = `Pedido N.${id} cancelado com sucesso.`
-    //   setTimeout(() => {
-    //     this.msg = ''
-    //   }, 3500)
-    // },
+    }
+   
     // async alterStatusRequest(event, id) {
     //   const newStatus = event.target.value
     //   const newstatusSend = JSON.stringify({ status: newStatus })
@@ -111,8 +97,7 @@ export default {
 
 <style scoped>
 #main-table {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100;
   background: rgba(255, 255, 255, 0.35);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(13.5px);
@@ -136,11 +121,11 @@ export default {
 
 #table-head div,
 #row div {
-  width: 15%;
+  width: 18%;
 }
 
 #acoes {
-  width: 20%;
+  display: flex;
 }
 
 #row {
@@ -165,11 +150,12 @@ select {
   font-weight: bold;
   border: 2px solid #222;
   border-radius: 5px;
-  padding: 5px;
+  padding: 0px 25px 0px 25px;
   font-size: 16px;
-  margin: 0 auto;
+  margin: 0 10px;
   cursor: pointer;
   transition: 0.5s;
+  height: 43px;
 }
 
 .delete-btn:hover {
