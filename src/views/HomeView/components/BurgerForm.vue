@@ -56,9 +56,7 @@ export default {
   },
   methods: {
     getIngredients() {
-      this.breadTypesData = []
-      this.meatTypesData = []
-      this.optionalItemsData = []
+      this.resetForm()
       this.service.getAll().then((res) => {
         if (res.data.success == true) {
           this.breadTypesData = res.data.data.filter((ingredient) => ingredient.type == 'bread')
@@ -69,6 +67,44 @@ export default {
         console.log(error)
       })
     },
+
+    resetForm() {
+      this.breadTypesData = []
+      this.meatTypesData = []
+      this.optionalItemsData = []
+      this.nameClient = null
+      this.breadType = null
+      this.meatType = null
+      this.optionalItems = []
+    },
+    
+    resetSelections() {
+      this.nameClient = null
+      this.breadType = null
+      this.meatType = null
+      this.optionalItems = []
+    },
+
+    prepareBody() {
+
+      let request = {
+        name: null,
+        ingredients: []
+      }
+
+      request.name = this.nameClient
+      if (this.breadType) request.ingredients.push(this.breadType)
+      if (this.meatType) request.ingredients.push(this.meatType)
+      if (this.optionalItems) request.ingredients.push(...this.optionalItems)
+
+      return request
+    },
+
+    createBurgerRequest() {
+      const request = this.prepareBody()
+      this.resetSelections()
+      console.log(request)
+    }
 
   },
   mounted() {

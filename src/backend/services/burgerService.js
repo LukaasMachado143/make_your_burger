@@ -1,0 +1,17 @@
+import api from '../axiosConfigs'
+
+export default class IngredientService {
+  prefix = 'burger'
+  async getAll() {
+    return await api.get(this.prefix)
+  }
+  async create(burgerData) {
+    return await api.post(this.prefix, burgerData)
+  }
+  async delete(id) {
+    return await api.delete(`${this.prefix}/${id}`)
+  }
+  async update(id, burgerData) {
+    return await api.put(`${this.prefix}/${id}`, burgerData)
+  }
+}
