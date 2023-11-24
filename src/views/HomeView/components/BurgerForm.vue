@@ -39,8 +39,10 @@
 <script>
 import MessageComponent from '../../../components/MessageComponent.vue';
 import IngredientService from '../../../backend/services/ingredientService';
+import BurgerRequestService from '../../../backend/services/burgerService';
 export default {
   name: "BurgerForm",
+  components: { MessageComponent },
   data() {
     return {
       breadTypesData: [],
@@ -51,13 +53,14 @@ export default {
       meatType: null,
       optionalItems: [],
       msg: null,
-      service: new IngredientService()
+      ingredientService: new IngredientService(),
+      burgerRequestService: new BurgerRequestService()
     };
   },
   methods: {
     getIngredients() {
       this.resetForm()
-      this.service.getAll().then((res) => {
+      this.ingredientService.getAll().then((res) => {
         if (res.data.success == true) {
           this.breadTypesData = res.data.data.filter((ingredient) => ingredient.type == 'bread')
           this.meatTypesData = res.data.data.filter((ingredient) => ingredient.type == 'meat')
@@ -77,7 +80,7 @@ export default {
       this.meatType = null
       this.optionalItems = []
     },
-    
+
     resetSelections() {
       this.nameClient = null
       this.breadType = null
@@ -103,14 +106,23 @@ export default {
     createBurgerRequest() {
       const request = this.prepareBody()
       this.resetSelections()
-      console.log(request)
-    }
+      this.burgerRequestService.create(request).then((res) => {
+        if (res.data.success == true) this.setMessage()
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
 
+    setMessage() {
+      this.msg = "Pedido realizado !"
+      setTimeout(() => {
+        this.msg = null
+      }, 3000)
+    }
   },
   mounted() {
     this.getIngredients();
   },
-  components: { MessageComponent }
 }
 </script>
 

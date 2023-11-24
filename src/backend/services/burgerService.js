@@ -1,7 +1,7 @@
 import api from '../axiosConfigs'
 
 export default class IngredientService {
-  prefix = 'burger'
+  prefix = 'burgerRequest'
   async getAll() {
     return await api.get(this.prefix)
   }
