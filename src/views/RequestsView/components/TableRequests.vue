@@ -23,19 +23,10 @@
           </ul>
         </div>
         <div id="acoes">
-          <select
-            name="status"
-            id="status"
-            v-model="burgerData.status"
-            @change="alterStatusRequest($event, burgerData.id)"
-          >
-            <option
-              v-for="status in statusData"
-              :key="status.id"
-              :value="status.type"
-              :selected="burgerData.status"
-            >
-              {{ status.type }}
+          <select name="status" id="status" v-model="burgerData.status"
+            @change="alterStatusRequest($event, burgerData.id)">
+            <option v-for="status, index in statusList" :key="index" :value="status" :selected="burgerData.status">
+              {{ status }}
             </option>
           </select>
           <button class="delete-btn" @click="deleteRequest(burgerData.id)">Cancelar</button>
@@ -47,6 +38,7 @@
 
 <script>
 import MessageComponent from '../../../components/MessageComponent.vue'
+import Service from "../../../backend/services/burgerService"
 export default {
   name: 'TableRequests',
   components: {
@@ -54,52 +46,62 @@ export default {
   },
   data() {
     return {
-      burgersData: null,
+      burgersData: [],
+      statusList: ["Solicitado", "Em produção", "Finalizado"],
       statusData: null,
-      msg: null
+      msg: null,
+      service: new Service()
     }
   },
   methods: {
-    async getBurgerRequests() {
-      const request = await fetch('http://localhost:3000/burgers')
-      const burgerRequestData = await request.json()
-      this.burgersData = burgerRequestData
-      this.getStatus()
-    },
-    async getStatus() {
-      const request = await fetch('http://localhost:3000/status')
-      const statusRequestData = await request.json()
-      this.statusData = statusRequestData
-    },
-    async deleteRequest(id) {
-      const deleteRequest = await fetch(`http://localhost:3000/burgers/${id}`, {
-        method: 'DELETE'
+    getBurgerRequests() {
+      this.burgersData = []
+      this.service.getTable().then((res) => {
+        if (res.data.success) this.burgersData = res.data.data
+      }).catch((error) => {
+        console.log(error)
       })
-
-      const response = await deleteRequest.json()
-      this.getBurgerRequests()
-      this.msg = `Pedido N.${id} cancelado com sucesso.`
-      setTimeout(() => {
-        this.msg = ''
-      }, 3500)
-    },
-    async alterStatusRequest(event, id) {
-      const newStatus = event.target.value
-      const newstatusSend = JSON.stringify({ status: newStatus })
-      const alterRequest = await fetch(`http://localhost:3000/burgers/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: newstatusSend
-      })
-
-      const response = await alterRequest.json();
-
-      this.msg = `Status do pedido N.${response.id} atualizado para ${response.status}.`
-      setTimeout(() => {
-        this.msg = '',
-        this.getBurgerRequests()
-      }, 5000)
     }
+    // async getBurgerRequests() {
+    //   const request = await fetch('http://localhost:3000/burgers')
+    //   const burgerRequestData = await request.json()
+    //   this.burgersData = burgerRequestData
+    //   this.getStatus()
+    // },
+    // async getStatus() {
+    //   const request = await fetch('http://localhost:3000/status')
+    //   const statusRequestData = await request.json()
+    //   this.statusData = statusRequestData
+    // },
+    // async deleteRequest(id) {
+    //   const deleteRequest = await fetch(`http://localhost:3000/burgers/${id}`, {
+    //     method: 'DELETE'
+    //   })
+
+    //   const response = await deleteRequest.json()
+    //   this.getBurgerRequests()
+    //   this.msg = `Pedido N.${id} cancelado com sucesso.`
+    //   setTimeout(() => {
+    //     this.msg = ''
+    //   }, 3500)
+    // },
+    // async alterStatusRequest(event, id) {
+    //   const newStatus = event.target.value
+    //   const newstatusSend = JSON.stringify({ status: newStatus })
+    //   const alterRequest = await fetch(`http://localhost:3000/burgers/${id}`, {
+    //     method: 'PATCH',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: newstatusSend
+    //   })
+
+    //   const response = await alterRequest.json();
+
+    //   this.msg = `Status do pedido N.${response.id} atualizado para ${response.status}.`
+    //   setTimeout(() => {
+    //     this.msg = '',
+    //     this.getBurgerRequests()
+    //   }, 5000)
+    // }
   },
   mounted() {
     this.getBurgerRequests()
@@ -111,12 +113,12 @@ export default {
 #main-table {
   max-width: 1200px;
   margin: 0 auto;
-  background: rgba( 255, 255, 255, 0.35 );
-  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-  backdrop-filter: blur( 13.5px );
-  -webkit-backdrop-filter: blur( 13.5px );
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(13.5px);
+  -webkit-backdrop-filter: blur(13.5px);
   border-radius: 10px;
-  border: 1px solid rgba( 255, 255, 255, 0.18 );
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 #table-head,

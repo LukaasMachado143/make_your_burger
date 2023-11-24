@@ -5,6 +5,9 @@ export default class IngredientService {
   async getAll() {
     return await api.get(this.prefix)
   }
+  async getTable() {
+    return await api.get(`${this.prefix}/table`)
+  }
   async create(burgerData) {
     return await api.post(this.prefix, burgerData)
   }
