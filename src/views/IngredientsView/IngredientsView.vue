@@ -8,117 +8,99 @@
 
 <script>
 import IngredientForm from './components/ingredientForm.vue'
+import IngredientService from '../../backend/services/ingredientService.js'
 export default {
   name: "IngredientsView",
   components: { IngredientForm },
   data() {
     return {
+      service: new IngredientService(),
       ingredients: [
         {
           title: 'Pães',
           type: 'bread',
-          list: [
-            {
-              id: '1',
-              name: 'Americano'
-            },
-            {
-              id: '2',
-              name: 'Brioche'
-            },
-            {
-              id: '3',
-              name: 'Ciabatta'
-            },
-            {
-              id: '4',
-              name: 'Pão de cebola'
-            },
-            {
-              id: '5',
-              name: 'Italiano'
-            },
-            {
-              id: '6',
-              name: 'Pão de azeite'
-            },
-            {
-              id: '7',
-              name: 'Pão de Xis'
-            },
-            {
-              id: '8',
-              name: 'Australiano'
-            },
-            {
-              id: '9',
-              name: 'Pão de leite'
-            },
-            {
-              id: '10',
-              name: 'Baguette'
-            },
-          ]
+          list: []
         },
         {
           title: 'Carnes',
           type: 'meat',
-          list: [
-            {
-              id: 1,
-              name: "Maminha"
-            },
-            {
-              id: 2,
-              name: "Alcatra"
-            },
-            {
-              id: 3,
-              name: "Picanha"
-            },
-            {
-              id: 4,
-              name: "Veggie burger"
-            }
-          ]
+          list: []
         },
         {
           title: 'Opcionais',
           type: 'optional',
-          list: [
-            {
-              id: 1,
-              name: "Bacon"
-            },
-            {
-              id: 2,
-              name: "Cheddar"
-            },
-            {
-              id: 3,
-              name: "Salame"
-            },
-            {
-              id: 4,
-              name: "Tomate"
-            },
-            {
-              id: 4,
-              name: "Cebola roxa"
-            },
-            {
-              id: 4,
-              name: "Pepino"
-            }
-          ]
+          list: []
         }
       ]
     }
   },
   methods: {
+    resetList() {
+      this.ingredients = this.ingredients.map((item) => {
+        return { ...item, list: [] }
+      })
+    },
+    getList() {
+      this.resetList()
+      this.service.getFormatedList().then((res) => {
+        if (res.data.success == true) {
+          this.ingredients = this.ingredients.map((item) => {
+            const listByType = res.data.data.find((list) =>
+              list.type == item.type
+            )?.list
+            return { ...item, list: listByType ?? [] }
+          })
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    create(ingredient) {
+      this.service.create(ingredient).then((res) => {
+        if (res.data.success == true) this.getList()
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    update(id, name) {
+      this.service.update(id, name).then((res) => {
+        if (res.data.success == true) this.getList()
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    delete(id) {
+      this.service.delete(id).then((res) => {
+        if (res.data.success == true) this.getList()
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
     hanldeIngredient(ingredient) {
-      console.log(ingredient)
+      switch (ingredient.action) {
+        case "create":
+          delete ingredient.action
+          delete ingredient.id
+          this.create(ingredient)
+          break;
+        case "update":
+          delete ingredient.action
+          delete ingredient.type
+          this.update(ingredient.id, ingredient.name)
+          break;
+        case "delete":
+          delete ingredient.action
+          delete ingredient.type
+          delete ingredient.name
+          this.delete(ingredient.id)
+          break;
+        default:
+          break;
+      }
     }
+  },
+  created() {
+    this.getList()
   }
 }
 </script>

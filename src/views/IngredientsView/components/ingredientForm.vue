@@ -127,7 +127,7 @@ select {
 }
 
 .list-container {
-  max-height: 100px;
+  max-height: 150px;
   overflow: hidden;
   overflow-y: auto;
 }
