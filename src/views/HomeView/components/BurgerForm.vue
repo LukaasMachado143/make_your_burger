@@ -1,7 +1,7 @@
 <template>
   <div>
-    <MessageComponent :messageText="msg" v-show="msg"/>
-    <form id="burger-form"  @submit="insertBurger">
+    <MessageComponent :messageText="msg" v-show="msg" />
+    <form id="burger-form">
       <div class="input-container">
         <label for="nameClient">Nome do Cliente:</label>
         <input type="text" name="nameClient" id="nameClient" v-model="nameClient" placeholder="Digite seu nome...">
@@ -9,30 +9,28 @@
 
       <div class="input-container">
         <label for="breadType">Tipo do Pão:</label>
-        <select name="breadType" id="breadType" v-model="breadType">
-          <option value="">Selecione o tipo do pão...</option>
-          <option v-for="bread in breadTypesData" :key="bread.id" :value="bread.type">{{bread.type}}</option>
+        <select name="breadType" id="breadType" v-model="breadType" placeholder="Selecione o tipo do pão...">
+          <option v-for="bread in breadTypesData" :key="bread.id" :value="bread">{{ bread.name }}</option>
         </select>
       </div>
 
       <div class="input-container">
         <label for="meatType">Tipo da Carne:</label>
-        <select name="meatType" id="meatType" v-model="meatType">
-          <option value="">Selecione o tipo da carne...</option>
-          <option v-for="meat in meatTypesData" :key="meat.id" :value="meat.type">{{meat.type}}</option>
+        <select name="meatType" id="meatType" v-model="meatType" placeholder="Selecione o tipo da carne...">
+          <option v-for="meat in meatTypesData" :key="meat.id" :value="meat">{{ meat.name }}</option>
         </select>
       </div>
 
       <div id="optional-container" class="input-container">
-        <label id="optional-title" for="optionalItems" >Escolha seus opcionais:</label>
+        <label id="optional-title" for="optionalItems">Escolha seus opcionais:</label>
         <div class="checkbox-container" v-for="optionalItem in optionalItemsData" :key="optionalItem.id">
-          <input type="checkbox" name="optionalItems" id="optionalItems" v-model="optionalItems" :value="optionalItem.type">
-          <span>{{optionalItem.type}}</span>  
+          <input type="checkbox" name="optionalItems" id="optionalItems" v-model="optionalItems" :value="optionalItem">
+          <span>{{ optionalItem.name }}</span>
         </div>
       </div>
 
       <div class="input-container">
-        <input type="submit" class="submit-btn" value="Fazer Pedido">
+        <input type="button" class="submit-btn" value="Fazer Pedido" @click="createBurgerRequest">
       </div>
     </form>
   </div>
@@ -40,143 +38,121 @@
 
 <script>
 import MessageComponent from '../../../components/MessageComponent.vue';
-
-    export default {
-    name: "BurgerForm",
-    data() {
-        return {
-            breadTypesData: null,
-            meatTypesData: null,
-            optionalItemsData: null,
-            nameClient: null,
-            breadType: null,
-            meatType: null,
-            optionalItems: [],
-            msg: null
-        };
-    },
-    methods: {
-        async getIngredients() {
-            const request = await fetch("http://localhost:3000/ingredients");
-            const requestData = await request.json();
-            this.breadTypesData = requestData.breadTypes;
-            this.meatTypesData = requestData.meatTypes;
-            this.optionalItemsData = requestData.optionalItems;
-        },
-        async insertBurger(e) {
-            //prevent default events
-            e.preventDefault();
-            //creating body post
-            const burgerData = {
-                name: this.nameClient,
-                bread: this.breadType,
-                meat: this.meatType,
-                optionalItems: Array.from(this.optionalItems),
-                status: "Solicitado"
-            };
-            //transforming body in json Object
-            const burgerJson = JSON.stringify(burgerData);
-            //Send request to insert json Object
-            const postRequest = await fetch("http://localhost:3000/burgers", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: burgerJson
-            });
-            //Return of insert
-            const serverAnswer = await postRequest.json();
-            console.log(serverAnswer);
-            //send message for user
-            this.msg = `Pedido N.${serverAnswer.id} realizado com sucesso`;
-            setTimeout(() => this.msg = "",3000);
-            //clearning form
-            this.nameClient = "";
-            this.breadType = "";
-            this.meatType = "";
-            this.optionalItems = [];
+import IngredientService from '../../../backend/services/ingredientService';
+export default {
+  name: "BurgerForm",
+  data() {
+    return {
+      breadTypesData: [],
+      meatTypesData: [],
+      optionalItemsData: [],
+      nameClient: null,
+      breadType: null,
+      meatType: null,
+      optionalItems: [],
+      msg: null,
+      service: new IngredientService()
+    };
+  },
+  methods: {
+    getIngredients() {
+      this.breadTypesData = []
+      this.meatTypesData = []
+      this.optionalItemsData = []
+      this.service.getAll().then((res) => {
+        if (res.data.success == true) {
+          this.breadTypesData = res.data.data.filter((ingredient) => ingredient.type == 'bread')
+          this.meatTypesData = res.data.data.filter((ingredient) => ingredient.type == 'meat')
+          this.optionalItemsData = res.data.data.filter((ingredient) => ingredient.type == 'optional')
         }
+      }).catch((error) => {
+        console.log(error)
+      })
     },
-    mounted() {
-        this.getIngredients();
-    },
-    components: { MessageComponent }
+
+  },
+  mounted() {
+    this.getIngredients();
+  },
+  components: { MessageComponent }
 }
 </script>
 
 <style scoped>
+#burger-form {
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(13.5px);
+  -webkit-backdrop-filter: blur(13.5px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 15px;
+}
 
-  #burger-form{
-    max-width: 400px;
-    margin: 0 auto;
-    background-color: rgba( 255, 255, 255, 0.35 );
-    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    backdrop-filter: blur( 13.5px );
-    -webkit-backdrop-filter: blur( 13.5px );
-    border-radius: 10px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
-    padding: 15px;
-  }
+.input-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
 
-  .input-container{
-    display: flex;
-    flex-direction: column;
-   margin-bottom: 20px; 
-  }
+label {
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #222;
+  padding: 5px 10px;
+  border-left: 4px solid #FCBA03;
+}
 
-  label{
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: #222;
-    padding: 5px 10px;
-    border-left: 4px solid #FCBA03;
-  }
+input,
+select {
+  padding: 5px 10px;
+  width: 300px;
+  margin-left: 10px;
+}
 
-  input, select{
-    padding: 5px 10px;
-    width: 300px;
-    margin-left: 10px ;
-  }
+#optional-container {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
 
-  #optional-container{
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
+#optional-title {
+  width: 100%;
+}
 
-  #optional-title{
-    width: 100%;
-  }
+.checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  width: 50%;
+  margin-bottom: 20px;
+}
 
-  .checkbox-container{
-    display: flex;
-    align-items: flex-start;
-    width: 50%;
-    margin-bottom: 20px;
-  }
+.checkbox-container span,
+.checkbox-container input {
+  width: auto;
+}
 
-  .checkbox-container span,
-  .checkbox-container input{
-    width: auto;
-  }
+.checkbox-container span {
+  margin-left: 6px;
+  font-weight: bold;
+}
 
-  .checkbox-container span{
-    margin-left: 6px;
-    font-weight: bold;
-  }
+.submit-btn {
+  background-color: #222;
+  color: #FCBA03;
+  font-weight: bold;
+  border: 2px solid #222;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  margin: 0 auto;
+  cursor: pointer;
+  transition: 0.5s;
+}
 
-  .submit-btn{
-    background-color: #222;
-    color:#FCBA03;
-    font-weight: bold;
-    border: 2px solid #222;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 16px;
-    margin: 0 auto;
-    cursor: pointer;
-    transition: 0.5s;
-  }
-
-  .submit-btn:hover{
-    background-color: transparent;
-    color: #222;
-  }
+.submit-btn:hover {
+  background-color: transparent;
+  color: #222;
+}
 </style>
